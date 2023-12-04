@@ -6,7 +6,7 @@ const { MongoClient } = require("mongodb");
 const moment = require("moment-timezone");
 const express = require("express");
 const client = new MongoClient(`mongodb://localhost:27017`);
-const dbName = `Apollonia_Dental_Practice`;
+const dbName = `apollonia`;
 
 async function findDataWithFilterNaN(collectionName, option) {
   try {
@@ -251,9 +251,9 @@ async function insertUpdateData(collections, data) {
 
 const app = express();
 
-app.get("/apiman/v1/apollonia/:path", async (req, res) => {
+app.get(`/apiman/v1/${dbName}/:path`, async (req, res) => {
   if (kDebug) {
-    console.log("GET /apiman/v1/apollonia/:path");
+    console.log("GET /apiman/v1/${dbName}/:path");
   }
 
   const pathParam = req.params.path;
@@ -269,9 +269,9 @@ app.get("/apiman/v1/apollonia/:path", async (req, res) => {
     });
 });
 
-app.post("/apiman/v1/apollonia/:path", async (req, res) => {
+app.post(`/apiman/v1/${dbName}/:path`, async (req, res) => {
   if (kDebug) {
-    console.log("POST /apiman/v1/apollonia/:path");
+    console.log("POST /apiman/v1/${dbName}/:path");
   }
 
   const pathParam = req.params.path;
@@ -288,9 +288,9 @@ app.post("/apiman/v1/apollonia/:path", async (req, res) => {
     });
 });
 
-app.delete("/apiman/v1/apollonia/:path", async (req, res) => {
+app.delete(`/apiman/v1/${dbName}/:path`, async (req, res) => {
   if (kDebug) {
-    console.log("DELETE /apiman/v1/apollonia/:path");
+    console.log("DELETE /apiman/v1/${dbName}/:path");
   }
 
   const pathParam = req.params.path;
@@ -306,9 +306,9 @@ app.delete("/apiman/v1/apollonia/:path", async (req, res) => {
     });
 });
 
-app.put("/apiman/v1/apollonia/:path", async (req, res) => {
+app.put(`/apiman/v1/${dbName}/:path`, async (req, res) => {
   if (kDebug) {
-    console.log("PUT /apiman/v1/apollonia/:path");
+    console.log("PUT /apiman/v1/${dbName}/:path");
   }
 
   const pathParam = req.params.path;
