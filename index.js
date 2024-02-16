@@ -189,10 +189,11 @@ async function findDataWithFilterNaN(collectionName, option) {
 
 async function insertUpdateData(collections, data) {
   const this_kDebug = kDebug;
+  /*
   if (data.apiKey) {
     delete data.apiKey;
   }
-
+*/
   try {
     let last_id = 0;
     const option = {
@@ -211,7 +212,37 @@ async function insertUpdateData(collections, data) {
       if (isNaN(last_id)) {
         last_id = 0;
       }
-    } catch (err) {}
+    } catch (err) {
+        if (this_kDebug) {
+            console.log("\nlast_id obj ", last_id_obj);
+            console.log("\nlast_id", last_id);
+          }
+          data._id = parseInt(last_id) + 1;
+          data.datetime = moment()
+            .tz("Asia/Bangkok")
+            .format("YYYY-MM-DDTHH:mm:ss.SSSZZ");
+          data.date = moment().tz("Asia/Bangkok").format("YYYY-MM-DD");
+          data.time = moment().tz("Asia/Bangkok").format("HH:mm:ss");
+      
+          if (this_kDebug) {
+            console.log("{}=>", data);
+          }
+          // Connect to the MongoDB database
+          await client.connect();
+          // Get a reference to the device_configuration collection
+          const db = client.db(dbName);
+          const collection = db.collection(collections);
+          const result = await collection.insertOne(data);
+          // Return the result of the operation
+          const body = {
+            httpStatus: 200,
+            payload:
+              "Document with _id " +
+              result.insertedId +
+              " in collection was created successfully",
+          };
+          return { statusCode: 201, body: body };
+    }
     if (this_kDebug) {
       console.log("\nlast_id obj ", last_id_obj);
       console.log("\nlast_id", last_id);
@@ -251,9 +282,9 @@ async function insertUpdateData(collections, data) {
 
 const app = express();
 
-app.get(`/apiman/v1/${dbName}/:path`, async (req, res) => {
+app.get(`/apiman/v1/apollonia/:path`, async (req, res) => {
   if (kDebug) {
-    console.log("GET /apiman/v1/${dbName}/:path");
+    console.log("GET /apiman/v1/apollonia/:path");
   }
 
   const pathParam = req.params.path;
@@ -269,9 +300,9 @@ app.get(`/apiman/v1/${dbName}/:path`, async (req, res) => {
     });
 });
 
-app.post(`/apiman/v1/${dbName}/:path`, async (req, res) => {
+app.post(`/apiman/v1/apollonia/:path`, async (req, res) => {
   if (kDebug) {
-    console.log("POST /apiman/v1/${dbName}/:path");
+    console.log("POST /apiman/v1/apollonia/:path");
   }
 
   const pathParam = req.params.path;
@@ -288,9 +319,9 @@ app.post(`/apiman/v1/${dbName}/:path`, async (req, res) => {
     });
 });
 
-app.delete(`/apiman/v1/${dbName}/:path`, async (req, res) => {
+app.delete(`/apiman/v1/apollonia/:path`, async (req, res) => {
   if (kDebug) {
-    console.log("DELETE /apiman/v1/${dbName}/:path");
+    console.log("DELETE /apiman/v1/apollonia/:path");
   }
 
   const pathParam = req.params.path;
@@ -306,9 +337,9 @@ app.delete(`/apiman/v1/${dbName}/:path`, async (req, res) => {
     });
 });
 
-app.put(`/apiman/v1/${dbName}/:path`, async (req, res) => {
+app.put(`/apiman/v1/apollonia/:path`, async (req, res) => {
   if (kDebug) {
-    console.log("PUT /apiman/v1/${dbName}/:path");
+    console.log("PUT /apiman/v1/apollonia/:path");
   }
 
   const pathParam = req.params.path;
